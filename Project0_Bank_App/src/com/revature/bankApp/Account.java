@@ -65,8 +65,9 @@ public class Account {
 	/**
 	 * This method adds money to the balance.
 	 * @param amount The amount to add.
+	 * @throws Exception Throws exception if amount is negative.
 	 */
-	public void addFunds(double amount)
+	public void addFunds(double amount) throws Exception
 	{
 		if(amount > 0)
 		{
@@ -75,24 +76,32 @@ public class Account {
 		}
 		else
 		{
-			// TODO throw an exception
+			throw new Exception("Amount must be greater than $0.00");
 		}
 	}
 	
 	/**
 	 * This withdraws money from the account.
 	 * @param amount The amount to withdraw.
-	 * @return Whether the operation succeeded.
+	 * @throws Exception Throws exception when funds exceed the balance or the withdrawal amount is higher than the bank daily limit.
 	 */
-	public boolean withdrawFunds(double amount)
+	public void withdrawFunds(double amount) throws Exception
 	{
 		if(amount < balance)
 		{
-			setBalance(balance - amount);
-			return true;
+			if(amount <= Bank.getMaxWithdrawalPerDay())
+			{
+				setBalance(balance - amount);
+			}
+			else
+			{
+				throw new Exception("Amount withdrawn must be less than $" + Bank.getMaxWithdrawalPerDay());
+			}
 		}
-		// TODO consider throwing an exception
-		return false;
+		else
+		{
+			throw new Exception("Insufficient funds. Your current balance is: $" + balance);
+		}
 	}
 	
 }
